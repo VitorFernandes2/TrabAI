@@ -32,7 +32,12 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.Task;
 import com.isec.trabai.R;
+import com.isec.trabai.model.data.SensorData;
+import com.isec.trabai.utils.CsvUtils;
 import com.isec.trabai.utils.SensorUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment implements SensorEventListener {
 
@@ -45,6 +50,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     //Data reading related
     private boolean readingData = false;
     private float timestamp;
+    private final static List<SensorData> sensorDataList = new ArrayList<>();
 
     //Coordinates related
     private LocationCallback locationCallback;
@@ -125,6 +131,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         saveDataButton.setOnClickListener(view -> {
             Log.d(TAG, "onCreateView: Send data to the destiny!");
             Toast.makeText(view.getContext(), "Sent collected data to remote server!", Toast.LENGTH_SHORT).show();
+            CsvUtils.saveSensorDataToCSVFile(sensorDataList, getContext().getFilesDir().getPath());
         });
 
         return saveDataView;
