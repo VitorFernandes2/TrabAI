@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Trab AI</string>
+    <string name="title_home">Save Data</string>
+    <string name="title_dashboard">Recognize Activity</string>
+</resources>

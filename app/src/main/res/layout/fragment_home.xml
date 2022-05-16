@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="10dp"
+    android:orientation="vertical"
+    tools:context=".ui.home.HomeFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ContentView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Andar"
+                tools:layout_editor_absoluteX="143dp" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correr"
+                tools:layout_editor_absoluteX="143dp"
+                tools:layout_editor_absoluteY="40dp" />
+
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descer"
+                tools:layout_editor_absoluteX="146dp"
+                tools:layout_editor_absoluteY="93dp" />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subir"
+                tools:layout_editor_absoluteX="146dp"
+                tools:layout_editor_absoluteY="93dp" />
+
+            <RadioButton
+                android:id="@+id/radioButton5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="Outra"
+                tools:layout_editor_absoluteX="146dp"
+                tools:layout_editor_absoluteY="93dp" />
+        </RadioGroup>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/TextContentWrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/StartScanData"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup">
+
+            <TextView
+                android:id="@+id/lblX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Acc X: "
+                app:layout_constraintStart_toStartOf="@id/TextContentWrapper"
+                app:layout_constraintTop_toTopOf="@+id/TextContentWrapper"/>
+
+            <TextView
+                android:id="@+id/lblY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Acc Y: "
+                app:layout_constraintStart_toEndOf="@id/lblX"
+                app:layout_constraintEnd_toStartOf="@+id/lblZ"
+                app:layout_constraintTop_toTopOf="@+id/TextContentWrapper" />
+
+            <TextView
+                android:id="@+id/lblZ"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Acc Z: "
+                app:layout_constraintEnd_toEndOf="@id/TextContentWrapper"
+                app:layout_constraintTop_toTopOf="@+id/TextContentWrapper"/>
+
+            <TextView
+                android:id="@+id/lblGyroX"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gyro X: "
+                app:layout_constraintStart_toStartOf="@id/TextContentWrapper"
+                app:layout_constraintTop_toBottomOf="@+id/lblX"/>
+
+            <TextView
+                android:id="@+id/lblGyroY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gryo Y: "
+                app:layout_constraintStart_toEndOf="@id/lblGyroX"
+                app:layout_constraintEnd_toStartOf="@+id/lblGyroZ"
+                app:layout_constraintTop_toBottomOf="@+id/lblX" />
+
+            <TextView
+                android:id="@+id/lblGyroZ"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Gyro Z: "
+                app:layout_constraintEnd_toEndOf="@id/TextContentWrapper"
+                app:layout_constraintTop_toBottomOf="@+id/lblX"/>
+
+            <TextView
+                android:id="@+id/lblGPS"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="GPS: "
+                app:layout_constraintStart_toStartOf="@id/TextContentWrapper"
+                app:layout_constraintTop_toBottomOf="@+id/lblGyroX"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/StartScanData"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:text="Começar Recolha"
+            app:layout_constraintTop_toBottomOf="@id/TextContentWrapper" />
+
+        <Button
+            android:id="@+id/StopScanData"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Parar recolha"
+            app:layout_constraintTop_toBottomOf="@id/StartScanData"/>
+
+        <Button
+            android:id="@+id/SendData"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Enviar Dados Recolhidos"
+            app:layout_constraintTop_toBottomOf="@+id/StopScanData" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
