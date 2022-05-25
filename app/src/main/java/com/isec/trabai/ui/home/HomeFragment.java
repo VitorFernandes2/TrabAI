@@ -122,7 +122,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
 
         final TextView txtGps = saveDataView.findViewById(R.id.lblGPS);
-        locationCallback = createLocationCallback(txtGps);
+        locationCallback = createLocationCallback(txtGps, sensorDataList, sensorDataBuilder);
 
         if (ActivityCompat.checkSelfPermission(saveDataView.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(saveDataView.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return saveDataView;
@@ -215,9 +215,12 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     SensorUtils.accelerometerStatusUpdate(sensorEvent, acc, txtAccX, txtAccY, txtAccZ);
                     sensorDataBuilder
                             .withSensorN(String.valueOf(Sensor.TYPE_ACCELEROMETER))
-                            .withXAcc(String.valueOf(acc[0]))
-                            .withYAcc(String.valueOf(acc[1]))
-                            .withZAcc(String.valueOf(acc[2]));
+                            .withXAcc(Double.toString(acc[0]))
+                            .withYAcc(Double.toString(acc[1]))
+                            .withZAcc(Double.toString(acc[2]))
+                            .setAccuracy(String.valueOf(sensorEvent.accuracy));
+
+                    Log.d(TAG, "Accelerometer Accuracy = " + sensorEvent.accuracy);
                     break;
                 case Sensor.TYPE_GYROSCOPE:
                     Log.d(TAG, "onSensorChanged: Gyroscope changed!");
@@ -225,21 +228,27 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                             txtGyroX, txtGyroY, txtGyroZ);
                     sensorDataBuilder
                             .withSensorN(String.valueOf(Sensor.TYPE_GYROSCOPE))
-                            .withTimestamp(String.valueOf(timestamp))
-                            .withXGyro(String.valueOf(deltaRotationVector[0]))
-                            .withYGyro(String.valueOf(deltaRotationVector[1]))
-                            .withZGyro(String.valueOf(deltaRotationVector[2]));
+                            .withTimestamp(Double.toString(timestamp))
+                            .withXGyro(Double.toString(deltaRotationVector[0]))
+                            .withYGyro(Double.toString(deltaRotationVector[1]))
+                            .withZGyro(Double.toString(deltaRotationVector[2]))
+                            .setAccuracy(String.valueOf(sensorEvent.accuracy));
+
+                    Log.d(TAG, "Gyroscope Accuracy = " + sensorEvent.accuracy);
                     break;
             }
 
             //session_id lat lng alt speed accuracy bearing timestamp x_acc y_acc z_acc x_gyro y_gyro z_gyro sensorN activity
+            //TODO: save accuracy, decide which accuracy to save in every sensor
+            //TODO: improve speed determination, Location Manager is known for poor speed accuracy
+            //TODO: see if the float values can be saved without exponential factoring
             sensorDataList.add(sensorDataBuilder.build());
         }
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        Log.d(TAG, "Accuracy changed to: " + accuracy);
     }
 
 }

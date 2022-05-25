@@ -53,7 +53,7 @@ public class SensorDataBuilder {
         return this;
     }
 
-    public SensorDataBuilder whitAlt(String alt) {
+    public SensorDataBuilder withAlt(String alt) {
         this.alt = alt;
         return this;
     }

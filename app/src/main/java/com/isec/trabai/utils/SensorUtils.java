@@ -8,7 +8,6 @@ import static java.lang.Math.sqrt;
 
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.isec.trabai.model.Constants;
@@ -31,7 +30,7 @@ public class SensorUtils {
             float axisZ = sensorEvent.values[2];
 
             // Calculate the angular speed of the sample
-            float omegaMagnitude = (float) sqrt(axisX*axisX + axisY*axisY + axisZ*axisZ);
+            float omegaMagnitude = (float) sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ);
 
             // Normalize the rotation vector if it's big enough to get the axis
             // (that is, EPSILON should represent your maximum allowable margin of error)
@@ -58,9 +57,9 @@ public class SensorUtils {
         float[] deltaRotationMatrix = new float[9];
         SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, deltaRotationVector);
 
-        final String textGyroX = "Gyro X: " + String.valueOf(deltaRotationVector[0]);
-        final String textGyroY = " Gyro Y: " + String.valueOf(deltaRotationVector[1]);
-        final String textGyroZ = " Gyro Z: " + String.valueOf(deltaRotationVector[2]);
+        final String textGyroX = "Gyro X: " + deltaRotationVector[0];
+        final String textGyroY = " Gyro Y: " + deltaRotationVector[1];
+        final String textGyroZ = " Gyro Z: " + deltaRotationVector[2];
 
         txtXGyr.setText(textGyroX);
         txtYGyr.setText(textGyroY);
@@ -97,9 +96,9 @@ public class SensorUtils {
             acc[1] = linear_acceleration[1];
             acc[2] = linear_acceleration[2];
 
-            final String textAccX = "Acc X: " + String.valueOf(acc[0]);
-            final String textAccY = " Acc Y: " + String.valueOf(acc[1]);
-            final String textAccZ = " Acc Z: " + String.valueOf(acc[2]);
+            final String textAccX = "Acc X: " + acc[0];
+            final String textAccY = " Acc Y: " + acc[1];
+            final String textAccZ = " Acc Z: " + acc[2];
 
             txtXAcc.setText(textAccX);
             txtYAcc.setText(textAccY);
