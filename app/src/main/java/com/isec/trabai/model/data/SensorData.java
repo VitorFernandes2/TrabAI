@@ -1,9 +1,12 @@
 package com.isec.trabai.model.data;
 
+import androidx.annotation.NonNull;
+
 public class SensorData {
 
     private String sessionId;
     private String lat;
+    private String lng;
     private String alt;
     private String speed;
     private String accuracy;
@@ -15,22 +18,28 @@ public class SensorData {
     private String xGyro;
     private String yGyro;
     private String zGyro;
+    private String sensorN;
+    private String activity;
 
     SensorData(final String sessionId,
-                      final String lat,
-                      final String alt,
-                      final String speed,
-                      final String accuracy,
-                      final String bearing,
-                      final String timestamp,
-                      final String xAcc,
-                      final String yAcc,
-                      final String zAcc,
-                      final String xGyro,
-                      final String yGyro,
-                      final String zGyro) {
+               final String lat,
+               final String lng,
+               final String alt,
+               final String speed,
+               final String accuracy,
+               final String bearing,
+               final String timestamp,
+               final String xAcc,
+               final String yAcc,
+               final String zAcc,
+               final String xGyro,
+               final String yGyro,
+               final String zGyro,
+               final String sensorN,
+               final String activity) {
         this.sessionId = sessionId;
         this.lat = lat;
+        this.lng = lng;
         this.alt = alt;
         this.speed = speed;
         this.accuracy = accuracy;
@@ -42,6 +51,8 @@ public class SensorData {
         this.xGyro = xGyro;
         this.yGyro = yGyro;
         this.zGyro = zGyro;
+        this.sensorN = sensorN;
+        this.activity = activity;
     }
 
     public String getSessionId() {
@@ -58,6 +69,14 @@ public class SensorData {
 
     public void setLat(String lat) {
         this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 
     public String getAlt() {
@@ -148,22 +167,44 @@ public class SensorData {
         this.zGyro = zGyro;
     }
 
+    public String getSensorN() {
+        return sensorN;
+    }
+
+    public void setSensorN(String sensorN) {
+        this.sensorN = sensorN;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
+    @NonNull
     @Override
     public String toString() {
-        return "SensorData{" +
-                "sessionId='" + sessionId + '\'' +
-                ", lat='" + lat + '\'' +
-                ", alt='" + alt + '\'' +
-                ", speed='" + speed + '\'' +
-                ", accuracy='" + accuracy + '\'' +
-                ", bearing='" + bearing + '\'' +
-                ", timestamp='" + timestamp + '\'' +
-                ", xAcc='" + xAcc + '\'' +
-                ", yAcc='" + yAcc + '\'' +
-                ", zAcc='" + zAcc + '\'' +
-                ", xGyro='" + xGyro + '\'' +
-                ", yGyro='" + yGyro + '\'' +
-                ", zGyro='" + zGyro + '\'' +
-                '}';
+        StringBuilder str = new StringBuilder();
+
+        str.append(sessionId)
+                .append(",").append(lat)
+                .append(",").append(lng)
+                .append(",").append(alt)
+                .append(",").append(speed)
+                .append(",").append(accuracy)
+                .append(",").append(bearing)
+                .append(",").append(timestamp)
+                .append(",").append(xAcc)
+                .append(",").append(yAcc)
+                .append(",").append(zAcc)
+                .append(",").append(xGyro)
+                .append(",").append(yGyro)
+                .append(",").append(zGyro)
+                .append(",").append(sensorN)
+                .append(",").append(activity);
+
+        return str.toString();
     }
 }

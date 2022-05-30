@@ -4,6 +4,7 @@ public class SensorDataBuilder {
 
     private String sessionId;
     private String lat;
+    private String lng;
     private String alt;
     private String speed;
     private String accuracy;
@@ -15,8 +16,26 @@ public class SensorDataBuilder {
     private String xGyro;
     private String yGyro;
     private String zGyro;
+    private String sensorN;
+    private String activity;
 
     public SensorDataBuilder() {
+        this.sessionId = "";
+        this.lat = "";
+        this.lng = "";
+        this.alt = "";
+        this.speed = "";
+        this.accuracy = "";
+        this.bearing = "";
+        this.timestamp = "";
+        this.xAcc = "";
+        this.yAcc = "";
+        this.zAcc = "";
+        this.xGyro = "";
+        this.yGyro = "";
+        this.zGyro = "";
+        this.sensorN = "";
+        this.activity = "";
     }
 
     public SensorDataBuilder withSessionId(String sessionId) {
@@ -29,7 +48,12 @@ public class SensorDataBuilder {
         return this;
     }
 
-    public SensorDataBuilder whitAlt(String alt) {
+    public SensorDataBuilder withLng(String lng) {
+        this.lng = lng;
+        return this;
+    }
+
+    public SensorDataBuilder withAlt(String alt) {
         this.alt = alt;
         return this;
     }
@@ -85,8 +109,18 @@ public class SensorDataBuilder {
         return this;
     }
 
+    public SensorDataBuilder withSensorN(String sensorN) {
+        this.sensorN = sensorN;
+        return this;
+    }
+
+    public SensorDataBuilder withActivity(String activity) {
+        this.activity = activity;
+        return this;
+    }
+
     public SensorData build() {
-        return new SensorData(sessionId, lat, alt, speed, accuracy,
-                bearing, timestamp, xAcc, yAcc, zAcc, xGyro, yGyro, zGyro);
+        return new SensorData(sessionId, lat, lng, alt, speed, accuracy,
+                bearing, timestamp, xAcc, yAcc, zAcc, xGyro, yGyro, zGyro, sensorN, activity);
     }
 }
