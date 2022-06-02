@@ -12,6 +12,8 @@
         android:id="@+id/ContentView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-40px"
+        android:layout_marginBottom="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +49,7 @@
                 android:id="@+id/radioButton3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Descer"
+                android:text="Conduzir"
                 tools:layout_editor_absoluteX="146dp"
                 tools:layout_editor_absoluteY="93dp" />
 
@@ -55,7 +57,7 @@
                 android:id="@+id/radioButton4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Subir"
+                android:text="Inativo"
                 tools:layout_editor_absoluteX="146dp"
                 tools:layout_editor_absoluteY="93dp" />
 
@@ -73,6 +75,7 @@
             android:id="@+id/TextContentWrapper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="40px"
             app:layout_constraintBottom_toTopOf="@+id/StartScanData"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

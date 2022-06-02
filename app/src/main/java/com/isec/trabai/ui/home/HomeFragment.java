@@ -40,6 +40,7 @@ import com.isec.trabai.utils.CsvUtils;
 import com.isec.trabai.utils.SensorUtils;
 import com.isec.trabai.utils.ServerUtils;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,8 +84,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
     private RadioButton rdbWalk;
     private RadioButton rdbRun;
-    private RadioButton rdbGoDown;
-    private RadioButton rdbGoUp;
+    private RadioButton rdbDrive;
+    private RadioButton rdbInactive;
     private RadioButton rdbOther;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -109,8 +110,8 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         //initialize radio button GroupView
         rdbWalk = saveDataView.findViewById(R.id.radioButton);
         rdbRun = saveDataView.findViewById(R.id.radioButton2);
-        rdbGoDown = saveDataView.findViewById(R.id.radioButton3);
-        rdbGoUp = saveDataView.findViewById(R.id.radioButton4);
+        rdbDrive = saveDataView.findViewById(R.id.radioButton3);
+        rdbInactive = saveDataView.findViewById(R.id.radioButton4);
         rdbOther = saveDataView.findViewById(R.id.radioButton5);
 
         acc[0] = 10;
@@ -136,13 +137,14 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             task.addOnFailureListener(e -> Log.e(TAG, e.getMessage()));
         });
 
-        final Button startButton = (Button) saveDataView.findViewById(R.id.StartScanData);
-        final Button finishButton = (Button) saveDataView.findViewById(R.id.StopScanData);
-        final Button saveDataButton = (Button) saveDataView.findViewById(R.id.SendData);
+        final Button startButton = saveDataView.findViewById(R.id.StartScanData);
+        final Button finishButton = saveDataView.findViewById(R.id.StopScanData);
+        final Button saveDataButton = saveDataView.findViewById(R.id.SendData);
 
         startButton.setOnClickListener(view -> {
             Log.d(TAG, "onCreateView: Started collecting data!");
             Toast.makeText(view.getContext(), "Started to collect data!", Toast.LENGTH_SHORT).show();
+            sensorDataList.clear();
             session_ID = new SimpleDateFormat("yyyyMMddHHmm", Locale.ENGLISH).format(new Date());
             readingData = true;
         });
@@ -171,12 +173,12 @@ public class HomeFragment extends Fragment implements SensorEventListener {
             activityName = Constants.RUN;
         });
 
-        rdbGoDown.setOnClickListener(view -> {
-            activityName = Constants.GO_DOWN;
+        rdbDrive.setOnClickListener(view -> {
+            activityName = Constants.DRIVE;
         });
 
-        rdbGoUp.setOnClickListener(view -> {
-            activityName = Constants.GO_UP;
+        rdbInactive.setOnClickListener(view -> {
+            activityName = Constants.INACTIVE;
         });
 
         rdbOther.setOnClickListener(view -> {
@@ -213,12 +215,14 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                 case Sensor.TYPE_ACCELEROMETER:
                     Log.d(TAG, "onSensorChanged: Accelerometer changed!");
                     SensorUtils.accelerometerStatusUpdate(sensorEvent, acc, txtAccX, txtAccY, txtAccZ);
+
                     sensorDataBuilder
-                            .withSensorN(String.valueOf(Sensor.TYPE_ACCELEROMETER))
-                            .withXAcc(Double.toString(acc[0]))
-                            .withYAcc(Double.toString(acc[1]))
-                            .withZAcc(Double.toString(acc[2]))
-                            .setAccuracy(String.valueOf(sensorEvent.accuracy));
+                            .withSensorN("" + Sensor.TYPE_ACCELEROMETER)
+                            .withTimestamp("" + new Timestamp(new Date().getTime()).getTime())
+                            .withXAcc("" + acc[0])
+                            .withYAcc("" + acc[1])
+                            .withZAcc("" + acc[2])
+                            .setAccuracy("" + sensorEvent.accuracy);
 
                     Log.d(TAG, "Accelerometer Accuracy = " + sensorEvent.accuracy);
                     break;
@@ -226,22 +230,20 @@ public class HomeFragment extends Fragment implements SensorEventListener {
                     Log.d(TAG, "onSensorChanged: Gyroscope changed!");
                     timestamp = SensorUtils.gyroscopeStatusUpdate(sensorEvent, timestamp, deltaRotationVector,
                             txtGyroX, txtGyroY, txtGyroZ);
+
                     sensorDataBuilder
-                            .withSensorN(String.valueOf(Sensor.TYPE_GYROSCOPE))
-                            .withTimestamp(Double.toString(timestamp))
-                            .withXGyro(Double.toString(deltaRotationVector[0]))
-                            .withYGyro(Double.toString(deltaRotationVector[1]))
-                            .withZGyro(Double.toString(deltaRotationVector[2]))
-                            .setAccuracy(String.valueOf(sensorEvent.accuracy));
+                            .withSensorN("" + Sensor.TYPE_GYROSCOPE)
+                            .withTimestamp("" + new Timestamp(new Date().getTime()).getTime())
+                            .withXGyro("" + deltaRotationVector[0])
+                            .withYGyro("" + deltaRotationVector[1])
+                            .withZGyro("" + deltaRotationVector[2])
+                            .setAccuracy("" + sensorEvent.accuracy);
 
                     Log.d(TAG, "Gyroscope Accuracy = " + sensorEvent.accuracy);
                     break;
             }
 
             //session_id lat lng alt speed accuracy bearing timestamp x_acc y_acc z_acc x_gyro y_gyro z_gyro sensorN activity
-            //TODO: save accuracy, decide which accuracy to save in every sensor
-            //TODO: improve speed determination, Location Manager is known for poor speed accuracy
-            //TODO: see if the float values can be saved without exponential factoring
             sensorDataList.add(sensorDataBuilder.build());
         }
     }

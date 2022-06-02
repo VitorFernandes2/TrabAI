@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -33,6 +34,7 @@ public class CsvUtils {
 
         try {
             final BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
+            //bw.append(transformData(preProcessing(data)));
             bw.append(transformData(data));
             bw.close();
             Log.d(TAG, "saveSensorDataToCSVFile: file " + filename + " successfully created!");
@@ -69,5 +71,18 @@ public class CsvUtils {
         }
 
         return str.toString();
+    }
+
+    //TODO: needs rework
+    private static List<SensorData> preProcessing(List<SensorData> data) {
+        data.removeIf(sensorData -> sensorData.toString().contains(",,"));
+
+        data.removeIf(sensorData -> {
+            int index = data.indexOf(sensorData) + 1;
+
+            return index < data.size() ? sensorData.equals(data.get(index)) : false;
+        });
+
+        return new ArrayList<>(data);
     }
 }

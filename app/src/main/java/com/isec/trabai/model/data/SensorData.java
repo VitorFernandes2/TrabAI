@@ -1,6 +1,7 @@
 package com.isec.trabai.model.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class SensorData {
 
@@ -181,6 +182,37 @@ public class SensorData {
 
     public void setActivity(String activity) {
         this.activity = activity;
+    }
+
+    //TODO: see if it has a logic problem
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof SensorData) {
+            SensorData sd = (SensorData) obj;
+            return (this.essentialData() == sd.essentialData() && this.timestamp != sd.timestamp) ? false : true;
+        }
+
+        return false;
+    }
+
+    private String essentialData() {
+        StringBuilder str = new StringBuilder();
+
+        str.append(lat)
+                .append(",").append(lng)
+                .append(",").append(alt)
+                .append(",").append(speed)
+                .append(",").append(accuracy)
+                .append(",").append(bearing)
+                .append(",").append(xAcc)
+                .append(",").append(yAcc)
+                .append(",").append(zAcc)
+                .append(",").append(xGyro)
+                .append(",").append(yGyro)
+                .append(",").append(zGyro)
+                .append(",").append(sensorN);
+
+        return str.toString();
     }
 
     @NonNull

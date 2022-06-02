@@ -7,11 +7,10 @@ public final class Constants {
     public static final int UR05S = 500;
     //Constants of the activity definition
     public static final String INACTIVE = "INACTIVE";
-    public static final String ACTIVE = "ACTIVE";
-    //TODO: read the project guidelines again
-    public static final String WALK = "ANDAR";
-    public static final String RUN = "CORRER";
-    public static final String GO_DOWN = "DESCER";
-    public static final String GO_UP = "SUBIR";
-    public static final String OTHER = "OUTRO";
+    public static final String WALK = "WALKING";
+    public static final String RUN = "RUNNING";
+    public static final String DRIVE = "DRIVING";
+    public static final String GO_DOWN = "GO_DOWN"; //This activity is not required to be recognized
+    public static final String GO_UP = "GO_UP";     //This activity is not required to be recognized
+    public static final String OTHER = "OTHER";     //This activity is not required to be recognized - but could be good to include
 }
