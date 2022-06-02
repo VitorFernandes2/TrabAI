@@ -57,9 +57,9 @@ public class SensorUtils {
         float[] deltaRotationMatrix = new float[9];
         SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, deltaRotationVector);
 
-        final String textGyroX = "Gyro X: " + deltaRotationVector[0];
-        final String textGyroY = " Gyro Y: " + deltaRotationVector[1];
-        final String textGyroZ = " Gyro Z: " + deltaRotationVector[2];
+        final String textGyroX = "Gyro X: " + String.format("%.4f", deltaRotationVector[0]);
+        final String textGyroY = " Gyro Y: " + String.format("%.4f", deltaRotationVector[1]);
+        final String textGyroZ = " Gyro Z: " + String.format("%.4f", deltaRotationVector[2]);
 
         txtXGyr.setText(textGyroX);
         txtYGyr.setText(textGyroY);
@@ -96,9 +96,9 @@ public class SensorUtils {
             acc[1] = linear_acceleration[1];
             acc[2] = linear_acceleration[2];
 
-            final String textAccX = "Acc X: " + acc[0];
-            final String textAccY = " Acc Y: " + acc[1];
-            final String textAccZ = " Acc Z: " + acc[2];
+            final String textAccX = "Acc X: " + String.format("%.4f", acc[0]);
+            final String textAccY = " Acc Y: " + String.format("%.4f", acc[1]);
+            final String textAccZ = " Acc Z: " + String.format("%.4f", acc[2]);
 
             txtXAcc.setText(textAccX);
             txtYAcc.setText(textAccY);
