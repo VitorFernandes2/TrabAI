@@ -19,8 +19,6 @@ import java.util.List;
 
 public class LocationUtils {
     private final static String TAG = "LocationUtils";
-    private static final double velocity = 0.0;
-    private static Location lastLocation;
 
     public static LocationRequest createLocationRequest() {
         LocationRequest locationRequest = LocationRequest.create();
@@ -30,7 +28,9 @@ public class LocationUtils {
         return locationRequest;
     }
 
-    public static LocationCallback createLocationCallback(final TextView txtGps, List<SensorData> sensorDataList, SensorDataBuilder sensorDataBuilder) {
+    public static LocationCallback createLocationCallback(final TextView txtGps,
+                                                          final List<SensorData> sensorDataList,
+                                                          final SensorDataBuilder sensorDataBuilder) {
         return new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
@@ -40,22 +40,11 @@ public class LocationUtils {
                             " Lat: " + location.getLatitude() + "\n" +
                             " Alt: " + location.getAltitude();
 
-                    //TODO: test if this logic works correctly
                     final int locationAccuracy = location.getAccuracy() < 34 ? 1 : location.getAccuracy() < 67 ? 2 : 3;
 
                     txtGps.setText(gpsText);
 
                     Log.d(TAG, "GPS Accuracy = " + locationAccuracy);
-
-                    //TODO: decide which speed calculation to use
-                        /*if (lastLocation != null) {
-                            //Time in seconds elapsed between current and last locations
-                            long elapsedTime = (location.getTime() - lastLocation.getTime()) / 1000;
-                            //Distance in meters between current and last locations
-                            float distance = lastLocation.distanceTo(location);
-
-                            velocity = distance / elapsedTime;
-                        }*/
 
                     sensorDataBuilder
                             .withSensorN("0")
@@ -65,10 +54,8 @@ public class LocationUtils {
                             .withLng("" + location.getLongitude())
                             .withAlt("" + location.getAltitude())
                             .withSpeed("" + location.getSpeed())
-                            //.withSpeed("" + velocity)
                             .setBearing("" + location.getBearing());
 
-                    //lastLocation = location;
                     sensorDataList.add(sensorDataBuilder.build());
                 }
             }

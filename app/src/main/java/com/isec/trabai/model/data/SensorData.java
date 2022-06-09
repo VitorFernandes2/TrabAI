@@ -19,6 +19,9 @@ public class SensorData {
     private String xGyro;
     private String yGyro;
     private String zGyro;
+    private String xMag;
+    private String yMag;
+    private String zMag;
     private String sensorN;
     private String activity;
 
@@ -36,6 +39,9 @@ public class SensorData {
                final String xGyro,
                final String yGyro,
                final String zGyro,
+               final String xMag,
+               final String yMag,
+               final String zMag,
                final String sensorN,
                final String activity) {
         this.sessionId = sessionId;
@@ -52,6 +58,9 @@ public class SensorData {
         this.xGyro = xGyro;
         this.yGyro = yGyro;
         this.zGyro = zGyro;
+        this.xMag = xMag;
+        this.yMag = yMag;
+        this.zMag = zMag;
         this.sensorN = sensorN;
         this.activity = activity;
     }
@@ -168,6 +177,30 @@ public class SensorData {
         this.zGyro = zGyro;
     }
 
+    public String getxMag() {
+        return xMag;
+    }
+
+    public void setxMag(String xMag) {
+        this.xMag = xMag;
+    }
+
+    public String getyMag() {
+        return yMag;
+    }
+
+    public void setyMag(String yMag) {
+        this.yMag = yMag;
+    }
+
+    public String getzMag() {
+        return zMag;
+    }
+
+    public void setzMag(String zMag) {
+        this.zMag = zMag;
+    }
+
     public String getSensorN() {
         return sensorN;
     }
@@ -182,37 +215,6 @@ public class SensorData {
 
     public void setActivity(String activity) {
         this.activity = activity;
-    }
-
-    //TODO: see if it has a logic problem
-    @Override
-    public boolean equals(@Nullable Object obj) {
-        if (obj instanceof SensorData) {
-            SensorData sd = (SensorData) obj;
-            return (this.essentialData() == sd.essentialData() && this.timestamp != sd.timestamp) ? false : true;
-        }
-
-        return false;
-    }
-
-    private String essentialData() {
-        StringBuilder str = new StringBuilder();
-
-        str.append(lat)
-                .append(",").append(lng)
-                .append(",").append(alt)
-                .append(",").append(speed)
-                .append(",").append(accuracy)
-                .append(",").append(bearing)
-                .append(",").append(xAcc)
-                .append(",").append(yAcc)
-                .append(",").append(zAcc)
-                .append(",").append(xGyro)
-                .append(",").append(yGyro)
-                .append(",").append(zGyro)
-                .append(",").append(sensorN);
-
-        return str.toString();
     }
 
     @NonNull
@@ -234,6 +236,9 @@ public class SensorData {
                 .append(",").append(xGyro)
                 .append(",").append(yGyro)
                 .append(",").append(zGyro)
+                .append(",").append(xMag)
+                .append(",").append(yMag)
+                .append(",").append(zMag)
                 .append(",").append(sensorN)
                 .append(",").append(activity);
 

@@ -50,8 +50,10 @@ import java.util.Locale;
 public class HomeFragment extends Fragment implements SensorEventListener {
 
     private static final String TAG = "HomeFragment";
-    //Accelerometer auxiliary variable to store the previous state values
+    //Accelerometer auxiliary array
     private final static float[] acc = new float[3];
+    //Magnetometer auxiliary array
+    private final static float[] mag = new float[3];
     //Gyroscope rotation auxiliary array
     private static final float[] deltaRotationVector = new float[4];
 
@@ -71,6 +73,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor acSensor;
     private Sensor gyrSensor;
+    private Sensor magSensor;
     private LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(createLocationRequest());
 
     //UI Components
@@ -96,6 +99,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         sensorManager = (SensorManager) saveDataView.getContext().getSystemService(Context.SENSOR_SERVICE);
         acSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gyrSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        magSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         //initialize accelerometer TextViews
         txtAccX = saveDataView.findViewById(R.id.lblX);
@@ -198,6 +202,7 @@ public class HomeFragment extends Fragment implements SensorEventListener {
         super.onResume();
         sensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, gyrSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, magSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -241,9 +246,23 @@ public class HomeFragment extends Fragment implements SensorEventListener {
 
                     Log.d(TAG, "Gyroscope Accuracy = " + sensorEvent.accuracy);
                     break;
+                case Sensor.TYPE_MAGNETIC_FIELD:
+                    Log.d(TAG, "onSensorChanged: Magnetometer changed!");
+                    SensorUtils.magnetometerStatusUpdate(sensorEvent, mag);
+
+                    sensorDataBuilder
+                            .withSensorN("" + Sensor.TYPE_MAGNETIC_FIELD)
+                            .withTimestamp("" + new Timestamp(new Date().getTime()).getTime())
+                            .withXMag("" + mag[0])
+                            .withYMag("" + mag[1])
+                            .withZMag("" + mag[2])
+                            .setAccuracy("" + sensorEvent.accuracy);
+
+                    Log.d(TAG, "Magnetometer Accuracy = " + sensorEvent.accuracy);
+                    break;
             }
 
-            //session_id lat lng alt speed accuracy bearing timestamp x_acc y_acc z_acc x_gyro y_gyro z_gyro sensorN activity
+            //session_id lat lng alt speed accuracy bearing timestamp x_acc y_acc z_acc x_gyro y_gyro z_gyro x_mag y_mag z_mag sensorN activity
             sensorDataList.add(sensorDataBuilder.build());
         }
     }

@@ -16,6 +16,9 @@ public class SensorDataBuilder {
     private String xGyro;
     private String yGyro;
     private String zGyro;
+    private String xMag;
+    private String yMag;
+    private String zMag;
     private String sensorN;
     private String activity;
 
@@ -34,6 +37,9 @@ public class SensorDataBuilder {
         this.xGyro = "";
         this.yGyro = "";
         this.zGyro = "";
+        this.xMag = "";
+        this.yMag = "";
+        this.zMag = "";
         this.sensorN = "";
         this.activity = "";
     }
@@ -109,6 +115,21 @@ public class SensorDataBuilder {
         return this;
     }
 
+    public SensorDataBuilder withXMag(String xMag) {
+        this.xMag = xMag;
+        return this;
+    }
+
+    public SensorDataBuilder withYMag(String yMag) {
+        this.yMag = yMag;
+        return this;
+    }
+
+    public SensorDataBuilder withZMag(String zMag) {
+        this.zMag = zMag;
+        return this;
+    }
+
     public SensorDataBuilder withSensorN(String sensorN) {
         this.sensorN = sensorN;
         return this;
@@ -121,6 +142,6 @@ public class SensorDataBuilder {
 
     public SensorData build() {
         return new SensorData(sessionId, lat, lng, alt, speed, accuracy,
-                bearing, timestamp, xAcc, yAcc, zAcc, xGyro, yGyro, zGyro, sensorN, activity);
+                bearing, timestamp, xAcc, yAcc, zAcc, xGyro, yGyro, zGyro, xMag, yMag, zMag, sensorN, activity);
     }
 }

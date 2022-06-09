@@ -8,6 +8,7 @@ import static java.lang.Math.sqrt;
 
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.isec.trabai.model.Constants;
@@ -104,6 +105,24 @@ public class SensorUtils {
             txtYAcc.setText(textAccY);
             txtZAcc.setText(textAccZ);
         }
+    }
+
+    public static void magnetometerStatusUpdate(final SensorEvent sensorEvent,
+                                                 final float[] mag) {
+        mag[0] = sensorEvent.values[0];
+        mag[1] = sensorEvent.values[1];
+        mag[2] = sensorEvent.values[2];
+    }
+
+    @Deprecated
+    public static double pressureStatusUpdate(final SensorEvent sensorEvent,
+                                            final TextView txtOrientation) {
+        // Ambient pressure in millibar units
+        float pressure = sensorEvent.values[0];
+
+        double auxPressure = pressure * 1000 * 0.986923267;
+
+        return (Constants.SST / Constants.L) * Math.pow(1 - (auxPressure / Constants.SAPS), (Constants.R * Constants.L) / (Constants.M * Constants.G));
     }
 
 }
