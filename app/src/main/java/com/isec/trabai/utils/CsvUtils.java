@@ -34,8 +34,7 @@ public class CsvUtils {
 
         try {
             final BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));
-            //bw.append(transformData(preProcessing(data)));
-            bw.append(transformData(data));
+            bw.append(transformData(preProcessing(data)));
             bw.close();
             Log.d(TAG, "saveSensorDataToCSVFile: file " + filename + " successfully created!");
         } catch (IOException e) {
@@ -62,6 +61,9 @@ public class CsvUtils {
                 .append(",").append("x_gyro")
                 .append(",").append("y_gyro")
                 .append(",").append("z_gyro")
+                .append(",").append("x_mag")
+                .append(",").append("y_mag")
+                .append(",").append("z_mag")
                 .append(",").append("sensorN")
                 .append(",").append("activity");
 
@@ -73,15 +75,8 @@ public class CsvUtils {
         return str.toString();
     }
 
-    //TODO: needs rework
     private static List<SensorData> preProcessing(List<SensorData> data) {
         data.removeIf(sensorData -> sensorData.toString().contains(",,"));
-
-        data.removeIf(sensorData -> {
-            int index = data.indexOf(sensorData) + 1;
-
-            return index < data.size() ? sensorData.equals(data.get(index)) : false;
-        });
 
         return new ArrayList<>(data);
     }
