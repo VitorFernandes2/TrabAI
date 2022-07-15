@@ -38,6 +38,7 @@ import com.isec.trabai.utils.SVMUtils;
 import com.isec.trabai.utils.SensorUtils;
 import com.isec.trabai.utils.UtilsFile;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -59,7 +60,7 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
     private String activityName = Constants.WALK;
     private Instances training_feature;
     private SVMUtils svm;
-    private static final String MODEL_FILENAME = "SVM.model";
+    private static final String MODEL_FILENAME = "SMO.model";
 
     //Accelerometer auxiliary array
     private final static float[] acc = new float[3];
@@ -89,11 +90,13 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
     private void loadModel(Context context){
         try {
             AssetManager assetManager = context.getAssets();
-            Log.d(TAG, context.getAssets().toString());
             Log.d(TAG, context.getAssets().open(MODEL_FILENAME).toString());
             mClassifier = (Classifier) weka.core.SerializationHelper.read(assetManager.open(MODEL_FILENAME));
+            //mClassifier = (Classifier) weka.core.SerializationHelper.read(context.getResources().getAssets().open(MODEL_FILENAME));
+        } catch (InvocationTargetException t) {
+            Log.d(TAG, "ERROR: " + t.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(TAG, "ERROR: " + e.getMessage());
         }
     }
 

@@ -40,10 +40,11 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
-    implementation files('lib\\jsch-0.1.55.jar')
-    implementation files('lib\\weka_3_7_13_mobile.jar')
-    implementation files('lib\\libsvm-3.25.jar')
-    implementation files('lib\\LibLINEAR.jar')
+    implementation files('lib/jsch-0.1.55.jar')
+    //implementation files('lib\\weka_3_7_13_mobile.jar')
+    implementation files('lib/libsvm-3.25.jar')
+    implementation files('lib/LibLINEAR.jar')
+    implementation files('lib/weka.jar')
     // https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/LibSVM
     //implementation group: 'nz.ac.waikato.cms.weka', name: 'LibSVM', version: '1.0.10'
     testImplementation 'junit:junit:4.13.2'
