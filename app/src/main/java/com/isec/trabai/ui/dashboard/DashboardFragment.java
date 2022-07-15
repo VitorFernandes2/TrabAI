@@ -38,16 +38,18 @@ import com.isec.trabai.utils.SVMUtils;
 import com.isec.trabai.utils.SensorUtils;
 import com.isec.trabai.utils.UtilsFile;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.sql.Timestamp;
 import java.util.Date;
 
 import weka.classifiers.Classifier;
 import weka.core.Instances;
+import weka.core.converters.ConverterUtils;
 
 public class DashboardFragment extends Fragment implements SensorEventListener {
 
-    private Classifier mClassifier;
+    private Classifier scheme;
     private String TAG = "DASHBOARD_FRAGMENT";
     private String folder_path;
     private FragmentDashboardBinding binding;
@@ -60,6 +62,7 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
     private String activityName = Constants.WALK;
     private Instances training_feature;
     private SVMUtils svm;
+    private Instances insts;
     private static final String MODEL_FILENAME = "SMO.model";
 
     //Accelerometer auxiliary array
@@ -82,21 +85,70 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
 
     //UI Components
     private TextView txtActivity;
+    private ConverterUtils.DataSource ds;
 
     //https://www.programcreek.com/java-api-examples/?api=weka.classifiers.functions.LibSVM
     //https://github.com/anaoliveiraalves/MySmartApp/blob/master/app/src/main/java/it/isec/ami/mysmartapp/MainActivity.java
     //https://pocketstudyblog.wordpress.com/2018/10/30/svm-classification-using-weka-api-in-java/
 
-    private void loadModel(Context context){
+    private void wekaClassifyFromModel(Context context){
         try {
             AssetManager assetManager = context.getAssets();
             Log.d(TAG, context.getAssets().open(MODEL_FILENAME).toString());
-            mClassifier = (Classifier) weka.core.SerializationHelper.read(assetManager.open(MODEL_FILENAME));
-            //mClassifier = (Classifier) weka.core.SerializationHelper.read(context.getResources().getAssets().open(MODEL_FILENAME));
-        } catch (InvocationTargetException t) {
+            scheme = (Classifier) weka.core.SerializationHelper.read(assetManager.open(MODEL_FILENAME));
+
+            final String arffFilename = "Final_Dataset_Balanced_Final.arff";
+            ds = new ConverterUtils.DataSource(assetManager.open(arffFilename));
+            insts = ds.getDataSet();
+            if (insts.classIndex() == -1) {
+                insts.setClassIndex(insts.numAttributes() - 1);
+            }
+        } catch (Exception t) {
             Log.d(TAG, "ERROR: " + t.getMessage());
+        }
+    }
+
+    public void wekaClassify() {
+        StringBuilder arffString = new StringBuilder();
+        arffString.append("@relation 'Final_Dataset_Balanced-weka.filters.unsupervised.attribute.Remove-R1,6,8,18'\n" +
+                "\n" +
+                "@attribute lat numeric\n" +
+                "@attribute lng numeric\n" +
+                "@attribute alt numeric\n" +
+                "@attribute speed numeric\n" +
+                "@attribute bearing numeric\n" +
+                "@attribute x_acc numeric\n" +
+                "@attribute y_acc numeric\n" +
+                "@attribute z_acc numeric\n" +
+                "@attribute x_gyro numeric\n" +
+                "@attribute y_gyro numeric\n" +
+                "@attribute z_gyro numeric\n" +
+                "@attribute x_mag numeric\n" +
+                "@attribute y_mag numeric\n" +
+                "@attribute z_mag numeric\n" +
+                "@attribute activity {OTHER,INACTIVE,DRIVING,WALKING,RUNNING}");
+
+        final String dataString = "39.972199,-8.709997,89.700005,2.400282,250.49246,-4.85161,2.867296,-4.819049,0.089896,0.140229,-0.228587,-19.92,-28.5,-26.64";
+        //TODO: Change here the dataString to the collection of the average data
+        arffString.append("\n\n@data\n" + dataString + ",?\n");
+
+        try {
+            final Instances unlabeledData = new Instances(
+                    new BufferedReader(new StringReader(arffString.toString())));
+            unlabeledData.setClassIndex(insts.numAttributes() - 1);
+            final double pred = scheme.classifyInstance(unlabeledData.instance(0));
+            final String prediction = insts.classAttribute().value((int) pred);
+            txtActivity.setText(prediction);
         } catch (Exception e) {
-            Log.d(TAG, "ERROR: " + e.getMessage());
+            Log.e(TAG, "wekaClassify: " + e.getMessage());
+        }
+    }
+
+    private void wekaTrain() {
+        try {
+
+        } catch (Exception e) {
+            Log.e(TAG, "An error occurred: " + e.getMessage());
         }
     }
 
@@ -106,7 +158,7 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
 
         txtActivity = saveDataView.findViewById(R.id.ActivityDecision);
 
-        loadModel(getContext());
+        wekaClassifyFromModel(getContext());
 
         //Create connection with sensor service
         sensorManager = (SensorManager) saveDataView.getContext().getSystemService(Context.SENSOR_SERVICE);
@@ -213,18 +265,14 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
                 break;
         }
 
-        //session_id lat lng alt speed accuracy bearing timestamp x_acc y_acc z_acc x_gyro y_gyro z_gyro x_mag y_mag z_mag sensorN activity
-        //TODO: Detect Activity
-        //boolean status_trained = training_feature.add(new Instances((Reader) sensorDataBuilder.build()));
-
-        //Log.e("TTTTT", "Training status: " + status_trained);
-
         sensorDataBuilder.build().toString();
 
         try {
             UtilsFile temp = new UtilsFile().buildUtilsFile();
             Log.d("AQUI", "Passei 1");
-            svm.predict(temp, mClassifier);
+            svm = new SVMUtils(getContext(), txtActivity);
+            //svm.predict(temp, scheme);
+            wekaClassify();
             Log.d("AQUI", "Passei 2");
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
