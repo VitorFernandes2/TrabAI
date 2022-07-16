@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.isec.trabai.R;
 import com.isec.trabai.databinding.FragmentDashboardBinding;
 import com.isec.trabai.model.Constants;
+import com.isec.trabai.model.data.SensorData;
 import com.isec.trabai.model.data.SensorDataBuilder;
 import com.isec.trabai.utils.SVMUtils;
 import com.isec.trabai.utils.SensorUtils;
@@ -41,7 +42,9 @@ import com.isec.trabai.utils.UtilsFile;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import weka.classifiers.Classifier;
 import weka.core.Instances;
@@ -56,6 +59,7 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
 
     //Data reading related
     private boolean readingData = false;
+    private final static List<SensorData> sensorDataList = new ArrayList<>();
     private SensorDataBuilder sensorDataBuilder = new SensorDataBuilder();
     private float timestamp;
     private String session_ID;
@@ -108,7 +112,10 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
         }
     }
 
-    public void wekaClassify() {
+    public void wekaClassify(String lat, String lng, String alt, double speed, double bearing,
+                             double avgXACC, double avgYACC, double avgZACC,
+                             double avgXGYRO, double avgYGYRO, double avgZGYRO,
+                             double avgXMAG, double avgYMAG, double avgZMAG) {
         StringBuilder arffString = new StringBuilder();
         arffString.append("@relation 'Final_Dataset_Balanced-weka.filters.unsupervised.attribute.Remove-R1,6,8,18'\n" +
                 "\n" +
@@ -128,8 +135,21 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
                 "@attribute z_mag numeric\n" +
                 "@attribute activity {OTHER,INACTIVE,DRIVING,WALKING,RUNNING}");
 
-        final String dataString = "39.972199,-8.709997,89.700005,2.400282,250.49246,-4.85161,2.867296,-4.819049,0.089896,0.140229,-0.228587,-19.92,-28.5,-26.64";
-        //TODO: Change here the dataString to the collection of the average data
+        final String dataString = lat + "," +
+                lng + "," +
+                alt + "," +
+                speed + "," +
+                bearing + "," +
+                avgXACC + "," +
+                avgYACC + "," +
+                avgZACC + "," +
+                avgXGYRO + "," +
+                avgYGYRO + "," +
+                avgZGYRO + "," +
+                avgXMAG + "," +
+                avgYMAG + "," +
+                avgZMAG;
+
         arffString.append("\n\n@data\n" + dataString + ",?\n");
 
         try {
@@ -265,15 +285,22 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
                 break;
         }
 
-        sensorDataBuilder.build().toString();
+        sensorDataList.add(sensorDataBuilder.build());
 
         try {
-            UtilsFile temp = new UtilsFile().buildUtilsFile();
-            Log.d("AQUI", "Passei 1");
-            svm = new SVMUtils(getContext(), txtActivity);
-            //svm.predict(temp, scheme);
-            wekaClassify();
-            Log.d("AQUI", "Passei 2");
+            if (sensorDataList.size() >= 40) {
+                UtilsFile temp = new UtilsFile().buildUtilsFile();
+                svm = new SVMUtils(getContext(), txtActivity);
+                //svm.predict(temp, scheme);
+                SensorData auxSensor = sensorDataList.get(sensorDataList.size() - 1);
+                Double avgData[] = getSensorDataAVG(sensorDataList);
+                wekaClassify(auxSensor.getLat(), auxSensor.getLng(), auxSensor.getAlt(), avgData[0], avgData[1],
+                        avgData[2], avgData[3], avgData[4],
+                        avgData[5], avgData[6], avgData[7],
+                        avgData[8], avgData[9], avgData[10]);
+
+                sensorDataList.clear();
+            }
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
@@ -282,5 +309,44 @@ public class DashboardFragment extends Fragment implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         Log.d(TAG, "Accuracy changed to: " + accuracy);
+    }
+
+    private Double[] getSensorDataAVG(List<SensorData> sensorDataList) {
+        Double counter[] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        int dataSize = sensorDataList.size();
+
+        for (SensorData data : sensorDataList) {
+            counter[0] = counter[0] + Double.parseDouble(data.getSpeed());
+            counter[1] = counter[1] + Double.parseDouble(data.getBearing());
+
+            counter[2] = counter[2] + Double.parseDouble(data.getxAcc());
+            counter[3] = counter[3] + Double.parseDouble(data.getyAcc());
+            counter[4] = counter[4] + Double.parseDouble(data.getzAcc());
+
+            counter[5] = counter[5] + Double.parseDouble(data.getxGyro());
+            counter[6] = counter[6] + Double.parseDouble(data.getyGyro());
+            counter[7] = counter[7] + Double.parseDouble(data.getzGyro());
+
+            counter[8] = counter[8] + Double.parseDouble(data.getxMag());
+            counter[9] = counter[9] + Double.parseDouble(data.getyMag());
+            counter[10] = counter[10] + Double.parseDouble(data.getzMag());
+        }
+
+        counter[0] = counter[0] / dataSize;
+        counter[1] = counter[1] / dataSize;
+
+        counter[2] = counter[2] / dataSize;
+        counter[3] = counter[3] / dataSize;
+        counter[4] = counter[4] / dataSize;
+
+        counter[5] = counter[5] / dataSize;
+        counter[6] = counter[6] / dataSize;
+        counter[7] = counter[7] / dataSize;
+
+        counter[8] = counter[8] / dataSize;
+        counter[9] = counter[9] / dataSize;
+        counter[10] = counter[10] / dataSize;
+
+        return counter;
     }
 }
