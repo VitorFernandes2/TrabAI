@@ -23,25 +23,25 @@ public class SensorDataBuilder {
     private String activity;
 
     public SensorDataBuilder() {
-        this.sessionId = "";
-        this.lat = "";
-        this.lng = "";
-        this.alt = "";
-        this.speed = "";
-        this.accuracy = "";
-        this.bearing = "";
-        this.timestamp = "";
-        this.xAcc = "";
-        this.yAcc = "";
-        this.zAcc = "";
-        this.xGyro = "";
-        this.yGyro = "";
-        this.zGyro = "";
-        this.xMag = "";
-        this.yMag = "";
-        this.zMag = "";
-        this.sensorN = "";
-        this.activity = "";
+        this.sessionId = "0";
+        this.lat = "0";
+        this.lng = "0";
+        this.alt = "0";
+        this.speed = "0";
+        this.accuracy = "0";
+        this.bearing = "0";
+        this.timestamp = "0";
+        this.xAcc = "0";
+        this.yAcc = "0";
+        this.zAcc = "0";
+        this.xGyro = "0";
+        this.yGyro = "0";
+        this.zGyro = "0";
+        this.xMag = "0";
+        this.yMag = "0";
+        this.zMag = "0";
+        this.sensorN = "0";
+        this.activity = "INACTIVE";
     }
 
     public SensorDataBuilder withSessionId(String sessionId) {

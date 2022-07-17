@@ -61,4 +61,32 @@ public class LocationUtils {
             }
         };
     }
+
+    public static LocationCallback createLocationActivityCallback(final SensorDataBuilder sensorDataBuilder) {
+        return new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                for (Location location : locationResult.getLocations()) {
+                    final String gpsText = "Long: " + location.getLongitude() + "\n" +
+                            " Lat: " + location.getLatitude() + "\n" +
+                            " Alt: " + location.getAltitude();
+
+                    final int locationAccuracy = location.getAccuracy() < 34 ? 1 : location.getAccuracy() < 67 ? 2 : 3;
+
+                    Log.d(TAG, "GPS Accuracy = " + locationAccuracy);
+
+                    sensorDataBuilder
+                            .withSensorN("0")
+                            .withTimestamp("" + new Timestamp(new Date().getTime()).getTime())
+                            .setAccuracy("" + locationAccuracy)
+                            .withLat("" + location.getLatitude())
+                            .withLng("" + location.getLongitude())
+                            .withAlt("" + location.getAltitude())
+                            .withSpeed("" + location.getSpeed())
+                            .setBearing("" + location.getBearing());
+                }
+            }
+        };
+    }
 }
